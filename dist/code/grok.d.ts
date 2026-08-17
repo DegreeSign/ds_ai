@@ -1,19 +1,10 @@
-import { GrokSuccessResponseText, GrokSuccessResponseImage, GrokPromptObj, GrokFailedResponse } from "../types";
-import { GrokModelText, GrokModelImages, GrokImageTypes } from "./constants";
-type GrokInputParams = {
-    apiKey: string;
-} & ({
-    responseType: `json`;
-    prompt: GrokPromptObj[];
-    model?: GrokModelText;
-    format?: undefined;
-} | {
-    responseType: `image`;
-    prompt: string;
-    model?: GrokModelImages;
-    format?: GrokImageTypes;
-});
+import { AiSuccessResponseText, AiSuccessResponseImage, AiFailedResponse, AiInputParams } from "../types";
 declare const 
-/** Grok AI Text */
-grokAI: <T>({ apiKey, responseType, prompt, model, format, }: GrokInputParams) => Promise<GrokSuccessResponseText<T> | GrokSuccessResponseImage | GrokFailedResponse>;
-export { GrokInputParams, grokAI, };
+/** fetch available model ids from the endpoint's `GET /models` */
+fetchModels: ({ apiKey, baseURL, }: {
+    apiKey: string;
+    baseURL: string;
+}) => Promise<string[]>, 
+/** AI Text / Image */
+dsAI: <T>({ apiKey, baseURL, responseType, prompt, model, format, pricing, }: AiInputParams) => Promise<AiSuccessResponseText<T> | AiSuccessResponseImage | AiFailedResponse>;
+export { AiInputParams, dsAI, fetchModels, };

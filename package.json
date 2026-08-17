@@ -1,32 +1,33 @@
 {
-  "name": "@degreesign/grok",
-  "version": "1.0.2",
-  "description": "DegreeSign Grok AI SDK",
+  "name": "@degreesign/ai",
+  "version": "0.0.1",
+  "description": "DegreeSign AI SDK",
   "main": "dist/node/degreesign.node.min.js",
   "module": "dist/node/degreesign.node.min.js",
   "browser": "dist/browser/degreesign.min.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "webpack"
+    "build": "tsc --emitDeclarationOnly && webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DegreeSign/ds_grok.git"
+    "url": "git+https://github.com/DegreeSign/ds_ai.git"
   },
   "keywords": [
     "DegreeSign",
+    "AI SDK",
     "Grok API",
-    "Grok SDK"
+    "DeepSeek API"
   ],
   "author": "DegreeSign",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DegreeSign/ds_grok/issues"
+    "url": "https://github.com/DegreeSign/ds_ai/issues"
   },
-  "homepage": "https://github.com/DegreeSign/ds_grok#readme",
+  "homepage": "https://github.com/DegreeSign/ds_ai#readme",
   "devDependencies": {
-    "@types/node": "^22.10.2",
     "@types/fluent-ffmpeg": "^2.1.28",
+    "@types/node": "^22.10.2",
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "clean-webpack-plugin": "^4.0.0",
     "esbuild": "^0.24.2",

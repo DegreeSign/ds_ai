@@ -10,6 +10,7 @@ const commonConfig: Configuration = {
     resolve: {
         extensions: [`.ts`, `.js`], // Resolve .ts and .js files
     },
+    externals: {},
     module: {
         rules: [
             {
@@ -21,9 +22,9 @@ const commonConfig: Configuration = {
     },
     plugins: [ // @ts-ignore
         // new BundleAnalyzerPlugin(),
-        new CleanWebpackPlugin(), // Clean output directory before each build
+        // new CleanWebpackPlugin(), // Clean output directory before each build
         new webpack.BannerPlugin({
-            banner: `/*! MIT License. DegreeSign Grok AI SDK. https://opensource.org/licenses/MIT */`,
+            banner: `/*! MIT License. DegreeSign AI SDK. https://opensource.org/licenses/MIT */`,
             raw: true, // Ensures the comment appears as-is without being wrapped
         }),
     ],
@@ -43,7 +44,7 @@ module.exports = [{
     output: {
         path: path.resolve(__dirname, `dist/browser`), // Separate output directory
         filename: `degreesign.min.js`,
-        library: `dsGrok`, // Global variable for browsers
+        library: `dsAI`, // Global variable for browsers
         libraryTarget: `umd`, // UMD for browser
         globalObject: `this`,
     },

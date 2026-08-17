@@ -1,1 +1,1 @@
-## DegreeSign Grok AI SDK - Change Log
+## DegreeSign AI SDK - Change Log

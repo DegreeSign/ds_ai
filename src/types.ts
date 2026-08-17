@@ -1,4 +1,4 @@
-interface GrokResponseMessageObj {
+interface AiResponseMessageObj {
     /** Role of the message, e.g., "assistant" */
     role: string;
     /** Content of the message, e.g., "..." */
@@ -7,16 +7,16 @@ interface GrokResponseMessageObj {
     refusal?: string;
 };
 
-interface GrokResponseChoices {
+interface AiResponseChoices {
     /** Index of the choice, e.g., 0 */
     index: number;
     /** Message details for the choice */
-    message: GrokResponseMessageObj;
+    message: AiResponseMessageObj;
     /** Reason the response finished, e.g., "stop" */
     finish_reason: string;
 }
 
-interface GrokPromptTokensDetails {
+interface AiPromptTokensDetails {
     /** Text tokens used, e.g., 702 */
     text_tokens: number;
     /** Audio tokens used, e.g., 0 */
@@ -27,7 +27,7 @@ interface GrokPromptTokensDetails {
     cached_tokens: number;
 };
 
-interface GrokCompletionTokensDetails {
+interface AiCompletionTokensDetails {
     /** Reasoning tokens used, e.g., 136 */
     reasoning_tokens: number;
     /** Audio tokens used, e.g., 0 */
@@ -38,7 +38,7 @@ interface GrokCompletionTokensDetails {
     rejected_prediction_tokens: number;
 }
 
-interface GrokResponseUsage {
+interface AiResponseUsage {
     /** Number of tokens in the prompt, e.g., 702 */
     prompt_tokens: number;
     /** Number of tokens in the completion, e.g., 47 */
@@ -46,14 +46,12 @@ interface GrokResponseUsage {
     /** Total number of tokens used, e.g., 885 */
     total_tokens: number;
     /** Detailed breakdown of prompt tokens */
-    prompt_tokens_details: GrokPromptTokensDetails;
+    prompt_tokens_details: AiPromptTokensDetails;
     /** Detailed breakdown of completion tokens */
-    completion_tokens_details: GrokCompletionTokensDetails;
-    /** Number of sources used, e.g., 0 */
-    num_sources_used: number;
-};
+    completion_tokens_details: AiCompletionTokensDetails;
+}
 
-interface GrokTextResponse {
+interface AiTextResponse {
     /** Unique identifier for the response, e.g., "4da0b8-2f-007" */
     id: string;
     /** Type of the response object, e.g., "chat.completion" */
@@ -63,14 +61,14 @@ interface GrokTextResponse {
     /** Model used for the response, e.g., "grok-4-fast" */
     model: string;
     /** Array of response choices */
-    choices: GrokResponseChoices[];
+    choices: AiResponseChoices[];
     /** Token usage details */
-    usage: GrokResponseUsage;
+    usage: AiResponseUsage;
     /** System fingerprint, e.g., "fp_19ea" */
     system_fingerprint: string;
 }
 
-type GrokResults<T> = {
+type AiResults<T> = {
     error: undefined;
     data: T;
 } | {
@@ -78,47 +76,46 @@ type GrokResults<T> = {
     code: string;
 };
 
-interface GrokSuccessResponse {
+interface AiSuccessResponse {
     success: true;
     costUSD: string;
     seconds: string;
 }
 
-interface GrokSuccessResponseText<T> extends GrokSuccessResponse {
+interface AiSuccessResponseText<T> extends AiSuccessResponse {
     type: `json`,
-    response: GrokFullResponse<T>;
+    response: AiFullResponse<T>;
 }
 
-interface GrokSuccessResponseImage extends GrokSuccessResponse {
+interface AiSuccessResponseImage extends AiSuccessResponse {
     type: `image`,
     response: string;
 }
 
-interface GrokFailedResponse {
+interface AiFailedResponse {
     success: false;
     error: string;
-    costUSD?: string;
 }
 
-interface GrokSource {
+interface AiSource {
     link: string;
     pageTitle: string
 }
 
-interface GrokFullResponse<T> {
+interface AiFullResponse<T> {
     data: T;
-    sources: GrokSource[];
+    sources: AiSource[];
 }
 
-type GrokAITypes = `json` | `image`;
+type AiResponseTypes = `json` | `image`;
 
-interface GrokPromptObj {
+interface AiPromptObj {
     dataKeyName: string;
     type: `number` | `boolean` | `string`;
     requiredData: string;
 }
 
-type GrokImageRequest = {
+type AiImageRequest = {
     type: `image_url`;
     image_url: {
         url: string;
@@ -129,7 +126,7 @@ type GrokImageRequest = {
     text: string;
 }
 
-type GrokImageResponse = {
+type AiImageResponse = {
     data: {
         url?: string;
         b64_json?: string;
@@ -137,17 +134,76 @@ type GrokImageResponse = {
     }[];
 }
 
+interface AiPricing {
+    prompt: number;
+    cached: number;
+    completion: number;
+}
+
+interface AiReqMessage {
+    role: `system` | `user`,
+    content: string,
+};
+
+type AiImageTypes = `url` | `b64_json`;
+
+interface AiModelListing {
+    id: string;
+    object: string;
+    created: number;
+    owned_by: string;
+}
+
+type AiModelsResponse = {
+    object: `list`;
+    data: AiModelListing[];
+};
+
+type AiReqObj = {
+    model: string;
+    prompt: string;
+    response_format?: AiImageTypes
+    n: number;
+} | {
+    model: string;
+    messages: AiReqMessage[];
+    stream: boolean;
+    temperature: number;
+}
+
+type AiInputParams = {
+    apiKey: string;
+    baseURL: string;
+    model?: string;
+    pricing?: AiPricing;
+} & ({
+    responseType: `json`;
+    prompt: AiPromptObj[];
+    format?: undefined;
+} | {
+    responseType: `image`;
+    prompt: string;
+    format?: AiImageTypes;
+})
+
 export {
-    GrokFullResponse,
-    GrokTextResponse,
-    GrokResponseUsage,
-    GrokResults,
-    GrokSuccessResponseText,
-    GrokSuccessResponseImage,
-    GrokFailedResponse,
-    GrokSource,
-    GrokAITypes,
-    GrokPromptObj,
-    GrokImageRequest,
-    GrokImageResponse,
+    AiFullResponse,
+    AiTextResponse,
+    AiResponseUsage,
+    AiResults,
+    AiSuccessResponseText,
+    AiSuccessResponseImage,
+    AiFailedResponse,
+    AiSource,
+    AiResponseTypes,
+    AiPromptObj,
+    AiImageRequest,
+    AiImageResponse,
+    AiPricing,
+    AiReqMessage,
+    AiImageTypes,
+    AiReqObj,
+    AiModelListing,
+    AiModelsResponse,
+    AiInputParams,
 }

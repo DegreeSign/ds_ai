@@ -1,8 +1,8 @@
 // import ffmpegStatic from 'ffmpeg-static';
 // import ffmpegObj from 'fluent-ffmpeg';
-import { grokAI } from './grok';
-import { GrokSuccessResponseText } from '../types';
-import { GROK_IMAGE_PROMPT } from './constants';
+import { dsAI } from './grok';
+import { AiSuccessResponseText, AiPricing } from '../types';
+import { AI_DEFAULT_MODEL, AI_IMAGE_PROMPT } from './constants';
 
 const
     // getFFMPEG = () => {
@@ -51,9 +51,9 @@ const
     // }: {
     //     description: string,
     //     imagesPath: string[]
-    // }): Promise<GrokImageRequest[]> => {
+    // }): Promise<AiImageRequest[]> => {
     //     try {
-    //         const imagesData: GrokImageRequest[] = [];
+    //         const imagesData: AiImageRequest[] = [];
     //         for (let i = 0; i < imagesPath.length; i++)
     //             imagesData.push({
     //                 type: `image_url`,
@@ -74,12 +74,20 @@ const
     //         return []
     //     };
     // },
-    grokGenImage = async ({
+    dsGenImage = async ({
         apiKey,
+        baseURL,
         description,
+        model = AI_DEFAULT_MODEL,
+        imageModel,
+        pricing,
     }: {
         apiKey: string;
+        baseURL: string;
         description: string;
+        model?: string;
+        imageModel: string;
+        pricing?: AiPricing;
     }): Promise<{
         prompt?: string;
         url?: string;
@@ -87,42 +95,49 @@ const
     }> => {
         try {
             const
-                text = await grokAI<{
+                text = await dsAI<{
                     imagePrompt: string;
                 }>({
                     apiKey,
+                    baseURL,
+                    model,
+                    pricing,
                     responseType: `json`,
                     prompt: [{
                         dataKeyName: `imagePrompt`,
                         type: `string`,
-                        requiredData: GROK_IMAGE_PROMPT
+                        requiredData: AI_IMAGE_PROMPT
                             .replace(`DESCRIPTION_TEXT`, description),
                     }],
-                }) as GrokSuccessResponseText<{
+                }) as AiSuccessResponseText<{
                     imagePrompt: string;
                 }>,
                 prompt = text?.success ? text.response?.data?.imagePrompt : ``,
-                imageResults = !prompt ? undefined : await grokAI<string>({
+                imageResults = !prompt ? undefined : await dsAI<string>({
                     apiKey,
+                    baseURL,
+                    model: imageModel,
+                    pricing,
                     responseType: `image`,
                     prompt: prompt
-                });
+                }),
+                costUSD = (
+                    (text?.success ? +text.costUSD : 0)
+                    + (imageResults?.success ? +imageResults.costUSD : 0)
+                ).toFixed(4);
             return {
                 prompt,
                 url: imageResults?.success && imageResults?.type == `image` ?
                     imageResults?.response
                     : undefined,
-                costUSD: (
-                    (+text?.costUSD || 0)
-                    + +(imageResults?.costUSD || 0)
-                ).toFixed(4),
+                costUSD,
             };
         } catch (e) {
-            console.log(`grokGenImage failed`, e);
+            console.log(`dsGenImage failed`, e);
         };
         return {}
     };
 
 export {
-    grokGenImage,
+    dsGenImage,
 };
