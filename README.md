@@ -19,6 +19,7 @@
   - [`dsGenImage`](#dsgenimage)
   - [`fetchModels`](#fetchmodels)
   - [Types](#types)
+- [Architecture](#architecture)
 - [FAQ](#faq)
 - [Keywords](#keywords)
 - [Contributing](#contributing)
@@ -57,7 +58,7 @@ pnpm add @degreesign/ai
 ### CDN (direct web implementation)
 Use in browsers through the jsDelivr CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@degreesign/ai@0.0.2/dist/browser/degreesign.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@degreesign/ai@0.0.3/dist/browser/degreesign.min.js"></script>
 ```
 The UMD bundle exposes the library on the `dsAI` global, so call `dsAI.dsAI(...)`, `dsAI.fetchModels(...)` and `dsAI.dsGenImage(...)`.
 
@@ -191,13 +192,17 @@ Returns an array of model ids from `GET /models`, or `[]` if the request fails.
 | `AiModelListing` | `{ id: string; object: string; created: number; owned_by: string }`. |
 | `AiModelsResponse` | `{ object: "list"; data: AiModelListing[] }`. |
 
+## Architecture
+
+The [architecture map](https://degreesign.github.io/ds_ai/architecture.html) — published by GitHub Pages from the `docs/` directory — shows every source module and meaningful function in dependency order, the typed relations between them, and one request traced from the caller to the parsed result. It is a single offline HTML file with no external requests.
+
 ## FAQ
 
 **What is DegreeSign AI SDK?**
 A lightweight TypeScript SDK that talks to any OpenAI-compatible AI endpoint. It builds requests, returns typed JSON with sources, calculates token costs and generates images.
 
 **Is it free?**
-The SDK is free and open source under the MIT License (`0.0.2` is a beta). You only pay your AI provider for the API calls you make.
+The SDK is free and open source under the MIT License. You only pay your AI provider for the API calls you make.
 
 **Does it work in Node.js and the browser?**
 Yes. It ships a Node bundle (`dist/node/degreesign.node.min.js`) and a UMD browser bundle (`dist/browser/degreesign.min.js`) exposed on the `dsAI` global.

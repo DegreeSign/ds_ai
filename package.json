@@ -1,6 +1,6 @@
 {
   "name": "@degreesign/ai",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Lightweight, dependency-free TypeScript SDK for any OpenAI-compatible AI endpoint (Grok, DeepSeek and more): typed JSON extraction with sources, cost calculation, model discovery and image generation.",
   "main": "dist/node/degreesign.node.min.js",
   "module": "dist/node/degreesign.node.min.js",
